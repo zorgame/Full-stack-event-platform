@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Areas privadas
+Disallow: /admin
+Disallow: /user
+Disallow: /login
+Disallow: /payment
+Disallow: /acceso-denegado
+
+Sitemap: https://ticketsnova.com/sitemap.xml
