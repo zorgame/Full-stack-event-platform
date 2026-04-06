@@ -26,7 +26,12 @@ def crear_pago_pedido(db: Session, *, payload: PaymentCreateRequest) -> PaymentS
         logger.warning("Error de negocio creando pago Crossmint: %s", exc)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except CrossmintApiError as exc:
-        logger.warning("Error de proveedor creando pago Crossmint: %s", exc)
+        logger.warning(
+            "Error de proveedor creando pago Crossmint: %s | status=%s | details=%s",
+            exc,
+            exc.status_code,
+            exc.details,
+        )
         detail = {
             "message": str(exc),
             "status_code": exc.status_code,
@@ -67,7 +72,12 @@ def obtener_estado_pago(
         logger.warning("Error de negocio consultando pago Crossmint: %s", exc)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except CrossmintApiError as exc:
-        logger.warning("Error de proveedor consultando pago Crossmint: %s", exc)
+        logger.warning(
+            "Error de proveedor consultando pago Crossmint: %s | status=%s | details=%s",
+            exc,
+            exc.status_code,
+            exc.details,
+        )
         detail = {
             "message": str(exc),
             "status_code": exc.status_code,
@@ -103,7 +113,12 @@ def obtener_estado_pago_por_token(
         logger.warning("Error de negocio consultando pago por token: %s", exc)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except CrossmintApiError as exc:
-        logger.warning("Error de proveedor consultando pago por token: %s", exc)
+        logger.warning(
+            "Error de proveedor consultando pago por token: %s | status=%s | details=%s",
+            exc,
+            exc.status_code,
+            exc.details,
+        )
         detail = {
             "message": str(exc),
             "status_code": exc.status_code,
@@ -139,7 +154,12 @@ def obtener_resumen_sincronizacion_pagos(
         logger.warning("Error de negocio obteniendo resumen de sincronizacion: %s", exc)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except CrossmintApiError as exc:
-        logger.warning("Error de proveedor en resumen de sincronizacion: %s", exc)
+        logger.warning(
+            "Error de proveedor en resumen de sincronizacion: %s | status=%s | details=%s",
+            exc,
+            exc.status_code,
+            exc.details,
+        )
         detail = {
             "message": str(exc),
             "status_code": exc.status_code,

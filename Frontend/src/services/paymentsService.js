@@ -1,4 +1,5 @@
 import { getSdkClient } from './sdkClient'
+import { CONTACT_INFO } from '../config/constants'
 
 const PAYMENT_STATUS_SUCCESS = new Set(['completed'])
 const PAYMENT_STATUS_FAILURE = new Set([
@@ -20,6 +21,11 @@ const PAYMENT_STATUS_KYC = new Set([
   'requires-recipient-verification',
 ])
 const PAYMENT_STATUS_TERMINAL = new Set([...PAYMENT_STATUS_SUCCESS, ...PAYMENT_STATUS_FAILURE])
+const CROSSMINT_ONRAMP_NOT_ENABLED_PATTERNS = [
+  /onramp is not yet enabled for production use in this project/i,
+  /start testing in staging\.crossmint\.com/i,
+  /enable production access/i,
+]
 
 function normalizePaymentStatus(value) {
   return String(value || '').trim().toLowerCase()
@@ -150,7 +156,54 @@ export function requiresPaymentKyc(status) {
   return PAYMENT_STATUS_KYC.has(normalizePaymentStatus(status))
 }
 
+function collectErrorMessages(error) {
+  const candidates = [
+    error?.data?.detail?.message,
+    error?.data?.detail?.details?.message,
+    error?.data?.detail?.details?.error,
+    error?.data?.detail?.details?.detail,
+    error?.data?.message,
+    error?.data?.detail,
+    error?.message,
+  ]
+
+  if (Array.isArray(error?.data?.detail?.details?.errors)) {
+    for (const item of error.data.detail.details.errors) {
+      if (typeof item === 'string') {
+        candidates.push(item)
+      } else if (item && typeof item === 'object') {
+        candidates.push(item.message, item.error, item.detail)
+      }
+    }
+  }
+
+  return candidates
+    .filter((value) => typeof value === 'string')
+    .map((value) => value.trim())
+    .filter(Boolean)
+}
+
+function isCrossmintOnrampNotEnabled(error) {
+  const messages = collectErrorMessages(error)
+  return messages.some((message) =>
+    CROSSMINT_ONRAMP_NOT_ENABLED_PATTERNS.some((pattern) => pattern.test(message))
+  )
+}
+
+function buildOnrampUnavailableMessage() {
+  const whatsapp = String(CONTACT_INFO.whatsappDisplay || CONTACT_INFO.whatsappDigits || '').trim()
+  if (whatsapp) {
+    return `La pasarela de pago no se encuentra habilitada temporalmente. Por favor, comunicate con nuestro canal de WhatsApp (${whatsapp}); estara disponible muy pronto.`
+  }
+
+  return 'La pasarela de pago no se encuentra habilitada temporalmente. Por favor, comunicate con nuestro canal de WhatsApp; estara disponible muy pronto.'
+}
+
 export function extractPaymentErrorMessage(error, fallback = 'No fue posible procesar el pago.') {
+  if (isCrossmintOnrampNotEnabled(error)) {
+    return buildOnrampUnavailableMessage()
+  }
+
   const nestedMessage =
     error?.data?.detail?.message ||
     error?.data?.detail?.details?.message ||

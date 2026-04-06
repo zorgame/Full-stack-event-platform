@@ -8,7 +8,6 @@ export class HttpClient {
       baseURL: options.baseURL,
       timeout: options.timeout ?? 15000,
       headers: {
-        'Content-Type': 'application/json',
         ...(options.headers ?? {}),
       },
     })
@@ -42,10 +41,19 @@ export class HttpClient {
     const cfg = config ? { ...config, headers: { ...(config.headers ?? {}) } } : { headers: {} }
     const isFormData = typeof FormData !== 'undefined' && data instanceof FormData
 
-    if (!isFormData) return cfg
+    if (!isFormData) {
+      if (!('Content-Type' in cfg.headers) && !('content-type' in cfg.headers)) {
+        cfg.headers['Content-Type'] = 'application/json'
+      }
+      return cfg
+    }
 
     if ('Content-Type' in cfg.headers) {
       delete cfg.headers['Content-Type']
+    }
+
+    if ('content-type' in cfg.headers) {
+      delete cfg.headers['content-type']
     }
 
     return cfg

@@ -46,11 +46,19 @@ async def crear_producto(
 
 @router.post("/upload-imagen", response_model=ProductoImagenUploadResponse, status_code=201)
 async def subir_imagen_producto(
-	file: UploadFile = File(...),
+	file: UploadFile | None = File(default=None),
+	image: UploadFile | None = File(default=None),
+	imagen: UploadFile | None = File(default=None),
 	admin=Depends(get_current_admin),
 ):
 	_ = admin
-	return await productos_controller.subir_imagen_producto(file)
+	upload = file or image or imagen
+	if upload is None:
+		raise HTTPException(
+			status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+			detail="Debe enviar un archivo en multipart/form-data (file, image o imagen)",
+		)
+	return await productos_controller.subir_imagen_producto(upload)
 
 
 @router.get("/{producto_id}", response_model=ProductoResponse)

@@ -1160,8 +1160,19 @@ async function confirmarCompra() {
         }),
       }
 
+      const mensajePasarela = extractPaymentErrorMessage(
+        errorPago,
+        'intenta nuevamente en unos minutos.'
+      )
+      const mensajePasarelaNormalizado = String(mensajePasarela || '').trim().toLowerCase()
+      const esPasarelaTemporalmenteNoDisponible = mensajePasarelaNormalizado.includes(
+        'pasarela de pago no se encuentra habilitada temporalmente'
+      )
+
       setMensajePasarela(
-        `Pedido creado, pero no se pudo iniciar la pasarela: ${extractPaymentErrorMessage(errorPago, 'intenta nuevamente en unos minutos.')}`,
+        esPasarelaTemporalmenteNoDisponible
+          ? `Pedido creado correctamente. ${mensajePasarela}`
+          : `Pedido creado, pero no se pudo iniciar la pasarela: ${mensajePasarela}`,
         'err'
       )
 

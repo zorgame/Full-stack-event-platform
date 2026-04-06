@@ -9,6 +9,7 @@ import requests
 from app.core.config import settings
 
 USDC_PRODUCTION = "solana:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDC_STAGING = "solana:4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"
 
 
 class CrossmintApiError(RuntimeError):
@@ -45,8 +46,14 @@ def _normalize_env(value: str) -> str:
     return normalized or "production"
 
 def _host_for_env(env_name: str) -> str:
-    _ = env_name
-    return str(settings.crossmint_host or "").strip().rstrip("/")
+    configured = str(settings.crossmint_host or "").strip().rstrip("/")
+    if configured:
+        return configured
+
+    if env_name == "staging":
+        return "https://staging.crossmint.com"
+
+    return "https://www.crossmint.com"
 
 def _normalize_support_whatsapp(value: str) -> str:
     return "".join(ch for ch in str(value or "") if ch.isdigit())
@@ -80,7 +87,7 @@ def get_onramp_config(*, strict: bool = True) -> OnrampConfig:
 
     token_locator = str(settings.crossmint_token_locator or "").strip()
     if not token_locator:
-        token_locator = USDC_PRODUCTION
+        token_locator = USDC_STAGING if env_name == "staging" else USDC_PRODUCTION
 
     cfg = OnrampConfig(
         env=env_name,
@@ -97,8 +104,8 @@ def get_onramp_config(*, strict: bool = True) -> OnrampConfig:
     )
 
     if strict:
-        if cfg.env != "production":
-            raise ValueError("CROSSMINT_ENV debe ser 'production' para esta integracion")
+        if cfg.env not in {"production", "staging"}:
+            raise ValueError("CROSSMINT_ENV debe ser 'production' o 'staging'")
 
         missing: list[str] = []
         if not cfg.server_key:
@@ -141,19 +148,51 @@ def call_crossmint(
         raise CrossmintApiError(f"No se pudo conectar con Crossmint: {exc}") from exc
 
     if response.status_code >= 400:
+        details = _safe_json(response)
+        provider_message = _extract_error_message(details)
+        base_message = f"Crossmint API error on {method} {url} (HTTP {response.status_code})"
+        message = f"{base_message}: {provider_message}" if provider_message else base_message
+
         raise CrossmintApiError(
-            f"Crossmint API error on {method} {url}",
+            message,
             status_code=response.status_code,
-            details=_safe_json(response),
+            details=details,
         )
 
     return _safe_json(response)
 
 def _extract_error_message(details: Any) -> str:
+    if isinstance(details, str):
+        return details.strip()
+
+    if isinstance(details, list):
+        for item in details:
+            nested = _extract_error_message(item)
+            if nested:
+                return nested
+        return ""
+
     if isinstance(details, dict):
-        message = details.get("message")
-        if isinstance(message, str):
-            return message
+        # Common provider shapes: {message}, {error}, {detail}, {errors:[...]}
+        direct_message = details.get("message")
+        if isinstance(direct_message, str) and direct_message.strip():
+            return direct_message.strip()
+
+        for key in ("error", "detail", "title"):
+            candidate = details.get(key)
+            if isinstance(candidate, str) and candidate.strip():
+                return candidate.strip()
+
+        nested_error = details.get("error")
+        nested_message = _extract_error_message(nested_error)
+        if nested_message:
+            return nested_message
+
+        nested_errors = details.get("errors")
+        errors_message = _extract_error_message(nested_errors)
+        if errors_message:
+            return errors_message
+
     return ""
 
 def ensure_wallet_linked(cfg: OnrampConfig) -> None:
