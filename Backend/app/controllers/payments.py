@@ -14,8 +14,6 @@ from app.services.crossmint_onramp import CrossmintApiError
 
 logger = logging.getLogger("tickets_api")
 
-
-
 def crear_pago_pedido(db: Session, *, payload: PaymentCreateRequest) -> PaymentStatusResponse:
     try:
         return payments_service.create_payment_for_order(

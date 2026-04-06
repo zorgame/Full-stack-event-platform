@@ -14,3 +14,4 @@ python-multipart==0.0.20
 
 redis==5.2.1
 requests==2.32.3
+alembic==1.13.2

@@ -40,24 +40,16 @@ def _safe_json(response: requests.Response) -> Any:
     except ValueError:
         return {"raw": response.text}
 
-
-
 def _normalize_env(value: str) -> str:
     normalized = str(value or "production").strip().lower()
     return normalized or "production"
-
-
 
 def _host_for_env(env_name: str) -> str:
     _ = env_name
     return str(settings.crossmint_host or "").strip().rstrip("/")
 
-
-
 def _normalize_support_whatsapp(value: str) -> str:
     return "".join(ch for ch in str(value or "") if ch.isdigit())
-
-
 
 def _format_amount(amount: Decimal | str | float | int) -> str:
     if isinstance(amount, Decimal):
@@ -72,8 +64,6 @@ def _format_amount(amount: Decimal | str | float | int) -> str:
         raise ValueError("El monto del pago debe ser mayor a cero")
 
     return f"{decimal_value.quantize(Decimal('0.01'))}"
-
-
 
 def get_onramp_config(*, strict: bool = True) -> OnrampConfig:
     env_name = _normalize_env(settings.crossmint_env)
@@ -127,8 +117,6 @@ def get_onramp_config(*, strict: bool = True) -> OnrampConfig:
 
     return cfg
 
-
-
 def call_crossmint(
     *,
     method: str,
@@ -161,16 +149,12 @@ def call_crossmint(
 
     return _safe_json(response)
 
-
-
 def _extract_error_message(details: Any) -> str:
     if isinstance(details, dict):
         message = details.get("message")
         if isinstance(message, str):
             return message
     return ""
-
-
 
 def ensure_wallet_linked(cfg: OnrampConfig) -> None:
     link_url = (
@@ -203,8 +187,6 @@ def ensure_wallet_linked(cfg: OnrampConfig) -> None:
             return
 
         raise
-
-
 
 def create_onramp_order(
     cfg: OnrampConfig,
@@ -242,8 +224,6 @@ def create_onramp_order(
 
     return data
 
-
-
 def get_onramp_order(cfg: OnrampConfig, *, payment_id: str) -> dict[str, Any]:
     data = call_crossmint(
         method="GET",
@@ -262,13 +242,9 @@ def extract_order_payload(data: dict[str, Any]) -> dict[str, Any]:
     nested = data.get("order") if isinstance(data.get("order"), dict) else None
     return nested if nested is not None else data
 
-
-
 def extract_payment_status(order_payload: dict[str, Any]) -> str:
     payment = order_payload.get("payment") if isinstance(order_payload.get("payment"), dict) else {}
     return str(payment.get("status") or "").strip().lower()
-
-
 
 def extract_checkout(order_payload: dict[str, Any]) -> dict[str, Any] | None:
     payment = order_payload.get("payment") if isinstance(order_payload.get("payment"), dict) else {}
@@ -284,7 +260,6 @@ def extract_checkout(order_payload: dict[str, Any]) -> dict[str, Any] | None:
         "public_key": str(public_key) if public_key else None,
         "session": session if isinstance(session, dict) else None,
     }
-
 
 
 def extract_kyc(order_payload: dict[str, Any]) -> dict[str, Any] | None:
@@ -305,8 +280,6 @@ def extract_kyc(order_payload: dict[str, Any]) -> dict[str, Any] | None:
         "environmentId": str(kyc.get("environmentId")),
     }
 
-
-
 def extract_failure_reason(order_payload: dict[str, Any]) -> dict[str, str | None] | None:
     payment = order_payload.get("payment") if isinstance(order_payload.get("payment"), dict) else {}
     failure_reason = payment.get("failureReason") if isinstance(payment.get("failureReason"), dict) else None
@@ -324,8 +297,6 @@ def extract_failure_reason(order_payload: dict[str, Any]) -> dict[str, str | Non
         "code": str(code) if code is not None else None,
         "message": str(message) if message is not None else None,
     }
-
-
 
 def extract_amount_currency(order_payload: dict[str, Any]) -> tuple[Decimal, str]:
     quote = order_payload.get("quote") if isinstance(order_payload.get("quote"), dict) else {}

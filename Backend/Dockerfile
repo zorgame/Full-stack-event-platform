@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY app /app/app
 COPY media /app/media
+COPY alembic /app/alembic
+COPY alembic.ini /app/alembic.ini
 
 RUN adduser --disabled-password --gecos "" appuser \
     && chown -R appuser:appuser /app
