@@ -8,7 +8,6 @@ services:
       - ./Backend/.env
     command:
       - mysqld
-      - --default-authentication-plugin=mysql_native_password
       - --innodb-buffer-pool-size=256M
       - --max_connections=200
     volumes:
