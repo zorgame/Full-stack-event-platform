@@ -106,6 +106,7 @@ class DetallePedidoResponse(DetallePedidoBase):
     subtotal: Decimal
     created_at: datetime
     categoria: CategoriaResponse
+    producto_nombre: str | None = None  # Nombre del evento
 
 class PedidoCreate(BaseModel):
     correo_electronico: str = Field(..., max_length=255)

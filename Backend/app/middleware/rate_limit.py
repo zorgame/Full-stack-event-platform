@@ -142,4 +142,20 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     headers={"Retry-After": str(retry_after)},
                 )
 
+        if normalized_path == "/pedidos/metricas/visitas/register" and request.method == "POST":
+            visit_window_seconds = 60
+            visit_window = int(time.time() // visit_window_seconds)
+            visit_key = f"rl:visit:{ip}:{visit_window}"
+            allowed, retry_after = self._redis_hit(
+                visit_key,
+                limit=30,
+                window_seconds=visit_window_seconds,
+            )
+            if not allowed:
+                return JSONResponse(
+                    status_code=429,
+                    content={"detail": "Demasiados eventos de visita. Espera e intenta de nuevo."},
+                    headers={"Retry-After": str(retry_after)},
+                )
+
         return await call_next(request)

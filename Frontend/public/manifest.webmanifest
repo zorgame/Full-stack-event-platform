@@ -1,6 +1,6 @@
 {
-  "name": "Tickets Nova",
-  "short_name": "Tickets Nova",
+  "name": "EventTix",
+  "short_name": "EventTix",
   "description": "Compra segura de tickets, seguimiento de pedidos y soporte profesional.",
   "start_url": "/",
   "scope": "/",
@@ -9,12 +9,12 @@
   "theme_color": "#0b2f4f",
   "icons": [
     {
-      "src": "/assets/tickets-nova-logo.png",
+      "src": "/assets/eventtix-logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/assets/tickets-nova-logo.png",
+      "src": "/assets/eventtix-logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

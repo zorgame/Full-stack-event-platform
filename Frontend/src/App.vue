@@ -1,13 +1,21 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import AppNavbar from './components/layout/AppNavbar.vue'
 import AppFooter from './components/layout/AppFooter.vue'
+import FloatingWhatsAppButton from './components/common/FloatingWhatsAppButton.vue'
 import { transicionRuta } from './utils/animations'
 
 const appReady = ref(false)
+const route = useRoute()
 let fallbackTimer = null
 let finalizeTimer = null
 let cleanupLoadListener = null
+
+const mostrarBotonWhatsappFlotante = computed(() => {
+  const nombreRuta = String(route.name || '')
+  return nombreRuta === 'home' || nombreRuta === 'ticket-categorias'
+})
 
 function marcarAppLista() {
   if (appReady.value) return
@@ -92,6 +100,7 @@ onBeforeUnmount(() => {
           </Transition>
         </RouterView>
       </main>
+      <FloatingWhatsAppButton v-if="mostrarBotonWhatsappFlotante" />
       <AppFooter />
     </div>
   </div>

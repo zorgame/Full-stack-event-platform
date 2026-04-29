@@ -1,6 +1,14 @@
 import { defineStore } from 'pinia'
 import { fetchCategoriesByProduct, fetchProducts } from '../services/catalogService'
 
+function normalizarLista(valor) {
+  if (Array.isArray(valor)) return valor
+  if (Array.isArray(valor?.items)) return valor.items
+  if (Array.isArray(valor?.results)) return valor.results
+  if (Array.isArray(valor?.data)) return valor.data
+  return []
+}
+
 export const useCatalogStore = defineStore('catalog', {
   state: () => ({
     products: [],
@@ -19,7 +27,7 @@ export const useCatalogStore = defineStore('catalog', {
       this.isLoadingProducts = true
       this.productsError = ''
       try {
-        this.products = await fetchProducts()
+        this.products = normalizarLista(await fetchProducts())
         this.productsLastLoadedAt = Date.now()
         return this.products
       } catch (error) {
@@ -41,7 +49,7 @@ export const useCatalogStore = defineStore('catalog', {
         [productId]: '',
       }
       try {
-        const categories = await fetchCategoriesByProduct(productId)
+        const categories = normalizarLista(await fetchCategoriesByProduct(productId))
         this.categoriesByProduct[productId] = categories
         return categories
       } catch (error) {

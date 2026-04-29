@@ -23,6 +23,7 @@ from app.schemas.metrics import (
     PedidosMetricasResumen,
     PedidosMetricasTendenciaItem,
 )
+from app.services.visitas_metricas import obtener_resumen_visitas
 from app.utils.cache import cache_get_json, cache_set_json
 
 
@@ -251,7 +252,7 @@ def _build_detail_filters(
 def _build_cache_key(payload: dict[str, Any]) -> str:
     raw = json.dumps(payload, sort_keys=True, ensure_ascii=True, default=str)
     digest = hashlib.sha1(raw.encode("utf-8")).hexdigest()
-    return f"{constants.CACHE_KEY_PEDIDOS_METRICAS_PREFIX}v1:{digest}"
+    return f"{constants.CACHE_KEY_PEDIDOS_METRICAS_PREFIX}v2:{digest}"
 
 
 def _metricas_ttl_seconds() -> int:
@@ -336,6 +337,10 @@ def obtener_metricas_pedidos(
     cached = cache_get_json(cache_key)
     if cached is not None:
         payload = PedidosMetricasResponse.model_validate(cached)
+        payload.visitantes = obtener_resumen_visitas(
+            fecha_desde=fecha_desde_final,
+            fecha_hasta=fecha_hasta_final,
+        )
         payload.performance.cached = True
         payload.performance.cache_ttl_seconds = cache_ttl_seconds
         return payload
@@ -586,6 +591,11 @@ def obtener_metricas_pedidos(
         for item in top_paises_rows
     ]
 
+    visitantes = obtener_resumen_visitas(
+        fecha_desde=fecha_desde_final,
+        fecha_hasta=fecha_hasta_final,
+    )
+
     response = PedidosMetricasResponse(
         filtros=PedidosMetricasFiltrosAplicados(
             rango=rango_aplicado,
@@ -602,6 +612,7 @@ def obtener_metricas_pedidos(
             ventas_solo_aprobadas=bool(ventas_solo_aprobadas),
         ),
         resumen=resumen,
+        visitantes=visitantes,
         estado_breakdown=estado_breakdown,
         tendencia=tendencia,
         top_productos=top_productos,

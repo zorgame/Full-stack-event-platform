@@ -1,6 +1,6 @@
 import { getEnvString } from './env'
 
-const BRAND_NAME = getEnvString('VITE_BRAND_NAME', 'Tickets Nova')
+const BRAND_NAME = getEnvString('VITE_BRAND_NAME', 'EventTix')
 
 function normalizeBaseUrl(value, fallback) {
   const normalized = String(value || '').trim().replace(/\/+$/, '')
@@ -14,20 +14,20 @@ function normalizeTwitterHandle(value) {
   return raw.startsWith('@') ? raw : `@${raw}`
 }
 
-const SITE_URL = normalizeBaseUrl(getEnvString('VITE_SITE_URL', ''), 'https://ticketsnova.com')
+const SITE_URL = normalizeBaseUrl(getEnvString('VITE_SITE_URL', ''), 'https://eventtix.example.com')
 
 export const SITE_CONFIG = {
   brand: {
     name: BRAND_NAME,
     legalName: getEnvString('VITE_BRAND_LEGAL_NAME', BRAND_NAME),
-    logoPath: getEnvString('VITE_BRAND_LOGO_PATH', '/assets/tickets-nova-logo.png'),
-    faviconPath: getEnvString('VITE_BRAND_FAVICON_PATH', '/assets/tickets-nova-logo.png'),
-    ogImagePath: getEnvString('VITE_BRAND_OG_IMAGE_PATH', '/assets/tickets-nova-logo.png'),
+    logoPath: getEnvString('VITE_BRAND_LOGO_PATH', '/assets/eventtix-logo.png'),
+    faviconPath: getEnvString('VITE_BRAND_FAVICON_PATH', '/assets/eventtix-logo.png'),
+    ogImagePath: getEnvString('VITE_BRAND_OG_IMAGE_PATH', '/assets/eventtix-logo.png'),
   },
   contact: {
-    email: getEnvString('VITE_SUPPORT_EMAIL', 'soporte@ticketsnova.com'),
-    whatsappDisplay: getEnvString('VITE_SUPPORT_WHATSAPP_DISPLAY', '+1 (628) 465-7863'),
-    whatsappDigits: getEnvString('VITE_SUPPORT_WHATSAPP_DIGITS', '16284657863').replace(/\D/g, ''),
+    email: getEnvString('VITE_SUPPORT_EMAIL', 'contact@eventtix.example'),
+    whatsappDisplay: getEnvString('VITE_SUPPORT_WHATSAPP_DISPLAY', '+1 (555) 000-0000'),
+    whatsappDigits: getEnvString('VITE_SUPPORT_WHATSAPP_DIGITS', '15550000000').replace(/\D/g, ''),
   },
   social: {
     facebook: getEnvString('VITE_FACEBOOK_URL', ''),
@@ -43,7 +43,7 @@ export const SITE_CONFIG = {
       'VITE_SEO_DEFAULT_DESCRIPTION',
       'Plataforma profesional para compra segura de tickets, seguimiento de pagos y soporte especializado.'
     ),
-    defaultImagePath: getEnvString('VITE_BRAND_OG_IMAGE_PATH', '/assets/tickets-nova-logo.png'),
+    defaultImagePath: getEnvString('VITE_BRAND_OG_IMAGE_PATH', '/assets/eventtix-logo.png'),
     robotsPolicy: getEnvString(
       'VITE_SEO_ROBOTS',
       'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'

@@ -3,6 +3,15 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
+class RegistroVisitaPayload(BaseModel):
+    visitor_id: str = Field(..., min_length=12, max_length=180)
+    path: str = Field(default="/", max_length=240)
+
+
+class RegistroVisitaResponse(BaseModel):
+    accepted: bool = True
+
+
 class PedidosMetricasFiltrosAplicados(BaseModel):
     rango: str
     group_by: str
@@ -81,9 +90,21 @@ class PedidosMetricasPerformance(BaseModel):
     cache_ttl_seconds: int
 
 
+class VisitantesMetricasResumen(BaseModel):
+    total_visitas: int
+    visitantes_unicos_aprox: int
+    visitas_hoy: int
+    visitantes_hoy_aprox: int
+    rango_dias_considerado: int
+    rango_recortado: bool = False
+    disponible: bool = True
+    fuente: str = "redis_hll"
+
+
 class PedidosMetricasResponse(BaseModel):
     filtros: PedidosMetricasFiltrosAplicados
     resumen: PedidosMetricasResumen
+    visitantes: VisitantesMetricasResumen
     estado_breakdown: list[PedidosMetricasEstadoItem] = Field(default_factory=list)
     tendencia: list[PedidosMetricasTendenciaItem] = Field(default_factory=list)
     top_productos: list[PedidosMetricasProductoItem] = Field(default_factory=list)

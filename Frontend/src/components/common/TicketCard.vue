@@ -23,7 +23,7 @@ const formattedDate = computed(() => {
 const cardCoverStyle = computed(() => {
   if (props.ticket?.imagen) {
     return {
-      backgroundImage: `linear-gradient(165deg, rgba(10,11,16,0.2), rgba(10,11,16,0.5)), url(${props.ticket.imagen})`,
+      backgroundImage: `linear-gradient(165deg, rgba(10,11,16,0.08), rgba(10,11,16,0.24)), url(${props.ticket.imagen})`,
     }
   }
 

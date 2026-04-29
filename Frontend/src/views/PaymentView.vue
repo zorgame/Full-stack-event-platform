@@ -67,7 +67,7 @@ const supportWhatsappNumber = computed(() => {
 const supportWhatsappLink = computed(() => {
   const summary = orderSummary.value
   const message = [
-    'Hola, necesito soporte con mi compra en Tickets Nova.',
+    'Hola, necesito soporte con mi compra en EventTix.',
     summary ? `Pedido: #${summary.id} / ${summary.referencia}` : '',
     `Estado: ${paymentStatusLabel.value}`,
   ]
@@ -93,8 +93,8 @@ const accessCredentials = computed(() => {
 })
 
 usePageMeta({
-  title: 'Pago seguro | Tickets Nova',
-  description: 'Finaliza y consulta el estado de tu pago con un flujo seguro y profesional en Tickets Nova.',
+  title: 'Pago seguro | EventTix',
+  description: 'Finaliza y consulta el estado de tu pago con un flujo seguro y profesional en EventTix.',
   indexable: false,
 })
 

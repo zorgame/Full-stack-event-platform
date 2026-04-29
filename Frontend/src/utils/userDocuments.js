@@ -48,7 +48,7 @@ function formatMoney(value, currency = 'USD') {
 
 function createBarcodeDataUrl(value) {
   const canvas = document.createElement('canvas')
-  JsBarcode(canvas, String(value || 'TN-0000'), {
+  JsBarcode(canvas, String(value || 'ETX-0000'), {
     format: 'CODE128',
     width: 1.4,
     height: 40,
@@ -248,8 +248,8 @@ function normalizeFileToken(value, fallback = 'documento') {
 }
 
 export async function downloadTicketReportPdf({
-  brandName = 'Tickets Nova',
-  brandLogoPath = '/assets/tickets-nova-logo.png',
+  brandName = 'EventTix',
+  brandLogoPath = '/assets/eventtix-logo.png',
   eventLogoPath = '',
   user,
   ticket,
@@ -397,12 +397,12 @@ export async function downloadTicketReportPdf({
   )
 
   const fileToken = normalizeFileToken(ticketCodeSource, 'ticket')
-  doc.save(`ticket-nova-${fileToken}.pdf`)
+  doc.save(`eventtix-${fileToken}.pdf`)
 }
 
 export async function downloadBillingReportPdf({
-  brandName = 'Tickets Nova',
-  brandLogoPath = '/assets/tickets-nova-logo.png',
+  brandName = 'EventTix',
+  brandLogoPath = '/assets/eventtix-logo.png',
   eventLogoPath = '',
   user,
   pedidos = [],

@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 
 from fastapi import UploadFile
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core import constants
@@ -154,10 +155,29 @@ def eliminar_producto(db: Session, *, producto_id: int) -> bool:
 		return False
 
 	imagen_eliminada = str(producto.imagen or "").strip() or None
-	productos_repo.eliminar_producto(db, producto)
-	_invalidate_productos_cache()
-	_cleanup_unused_local_image(db, imagen_eliminada)
-	return True
+	try:
+		productos_repo.eliminar_producto(db, producto)
+		_invalidate_productos_cache()
+		_cleanup_unused_local_image(db, imagen_eliminada)
+		return True
+	except IntegrityError:
+		# Si el producto tiene categorias referenciadas en pedidos/tickets, no se puede
+		# eliminar fisicamente: se archiva para mantener la integridad historica.
+		db.rollback()
+		producto = productos_repo.get_producto_with_categorias(db, producto_id)
+		if producto is None:
+			return False
+
+		producto.is_active = False
+		for categoria in producto.categorias:
+			categoria.activo = False
+			categoria.is_active = False
+			categoria.unidades_disponibles = 0
+			categoria.limite_por_usuario = None
+
+		productos_repo.actualizar_producto(db, producto)
+		_invalidate_productos_cache()
+		return True
 
 
 def crear_categoria_en_producto(

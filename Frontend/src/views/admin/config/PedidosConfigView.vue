@@ -184,6 +184,10 @@ function obtenerCantidadTicketsPedido(pedido) {
 
 function obtenerNombreCategoriaDetalle(detalle) {
   if (detalle?.categoria?.nombre) return detalle.categoria.nombre
+  if (detalle?.producto_nombre && detalle?.categoria?.nombre) {
+    return `${detalle.producto_nombre} · ${detalle.categoria.nombre}`
+  }
+  if (detalle?.categoria?.nombre) return detalle.categoria.nombre
   return `Categoría #${detalle?.categoria_id || '-'}`
 }
 

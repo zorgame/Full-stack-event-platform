@@ -4,9 +4,9 @@ import { CONTACT_INFO } from '../../config/constants'
 import { usePageMeta } from '../../utils/usePageMeta'
 
 usePageMeta({
-  title: 'Términos y Condiciones | Tickets Nova',
+  title: 'Términos y Condiciones | EventTix',
   description:
-    'Revisa los términos y condiciones de Tickets Nova para uso del servicio, pagos, responsabilidades y cumplimiento.',
+    'Revisa los términos y condiciones de EventTix para uso del servicio, pagos, responsabilidades y cumplimiento.',
 })
 
 const lastUpdated = '4 de abril de 2026'
@@ -16,7 +16,7 @@ const legalSections = [
     id: 'objeto-alcance',
     title: 'Objeto y alcance contractual',
     paragraphs: [
-      'Estos Términos regulan la relación jurídica entre Tickets Nova y cualquier persona natural o jurídica que acceda, navegue, cotice, compre o gestione tickets a través de nuestros canales digitales.',
+      'Estos Términos regulan la relación jurídica entre EventTix y cualquier persona natural o jurídica que acceda, navegue, cotice, compre o gestione tickets a través de nuestros canales digitales.',
       'El alcance cubre funcionalidades de búsqueda, selección de categoría, checkout, confirmación de compra, atención posterior, gestión documental y soporte de incidencias en torno a cada transacción.',
     ],
   },
@@ -33,7 +33,7 @@ const legalSections = [
     title: 'Registro de cuenta y verificación de identidad',
     paragraphs: [
       'El usuario se obliga a suministrar información veraz, completa y actualizada durante el alta de cuenta, compra, validación de titularidad o requerimientos de soporte operativo.',
-      'Tickets Nova podrá requerir pruebas adicionales de identidad o titularidad del pago cuando detecte inconsistencias, patrones atípicos de riesgo o alertas técnicas en los sistemas de control interno.',
+      'EventTix podrá requerir pruebas adicionales de identidad o titularidad del pago cuando detecte inconsistencias, patrones atípicos de riesgo o alertas técnicas en los sistemas de control interno.',
     ],
   },
   {
@@ -49,7 +49,7 @@ const legalSections = [
     title: 'Transferencia a FIFA y ventana de seguridad operativa',
     paragraphs: [
       'Para proteger al titular de la cuenta y reducir fraude, suplantación o transferencias no autorizadas, la opción de transferir tickets a FIFA se habilita únicamente durante los 15 días previos al evento asociado.',
-      'Fuera de esa ventana, la funcionalidad permanece restringida por controles preventivos de seguridad, validación de identidad y trazabilidad, conforme a las políticas internas y condiciones vigentes de Tickets Nova.',
+      'Fuera de esa ventana, la funcionalidad permanece restringida por controles preventivos de seguridad, validación de identidad y trazabilidad, conforme a las políticas internas y condiciones vigentes de EventTix.',
     ],
   },
   {
@@ -81,7 +81,7 @@ const legalSections = [
     title: 'Cancelaciones, aplazamientos y cambios de evento',
     paragraphs: [
       'Las decisiones sobre cancelación, reprogramación, cambios de sede, horarios o condiciones de acceso corresponden al organizador del evento y/o a los operadores autorizados.',
-      'Tickets Nova gestionará comunicación y lineamientos aplicables conforme la información oficial disponible, sin asumir control directo sobre decisiones externas a la infraestructura de la plataforma.',
+      'EventTix gestionará comunicación y lineamientos aplicables conforme la información oficial disponible, sin asumir control directo sobre decisiones externas a la infraestructura de la plataforma.',
     ],
   },
   {
@@ -96,7 +96,7 @@ const legalSections = [
     id: 'propiedad-intelectual',
     title: 'Propiedad intelectual y activos de plataforma',
     paragraphs: [
-      'Los signos distintivos, diseños, software, flujos de compra, contenidos y componentes tecnológicos de Tickets Nova están protegidos por normas de propiedad intelectual y uso autorizado.',
+      'Los signos distintivos, diseños, software, flujos de compra, contenidos y componentes tecnológicos de EventTix están protegidos por normas de propiedad intelectual y uso autorizado.',
       'Ningún usuario adquiere derechos de explotación, sublicenciamiento o reproducción comercial sobre dichos activos por el mero uso de la plataforma o la ejecución de una compra.',
     ],
   },
@@ -105,14 +105,14 @@ const legalSections = [
     title: 'Integraciones de terceros y alcance de responsabilidad',
     paragraphs: [
       'La operación puede involucrar servicios externos de pagos, mensajería, analítica, validación de identidad y conectores de inventario, cada uno sujeto a sus propios términos de servicio.',
-      'Tickets Nova responde por su capa de gestión y trazabilidad interna, pero no garantiza disponibilidad absoluta ni tiempos homogéneos de terceros sobre los que no tiene control directo.',
+      'EventTix responde por su capa de gestión y trazabilidad interna, pero no garantiza disponibilidad absoluta ni tiempos homogéneos de terceros sobre los que no tiene control directo.',
     ],
   },
   {
     id: 'crossmint-pagos-compliance',
     title: 'Procesamiento de pagos con Crossmint y cumplimiento',
     paragraphs: [
-      'Cuando el usuario inicia una transacción, Tickets Nova puede utilizar la infraestructura de pagos de Crossmint para orquestar cobros, validaciones, prevención de fraude y controles de cumplimiento financiero.',
+      'Cuando el usuario inicia una transacción, EventTix puede utilizar la infraestructura de pagos de Crossmint para orquestar cobros, validaciones, prevención de fraude y controles de cumplimiento financiero.',
       'Al aceptar estos Términos y continuar con el checkout, el usuario autoriza el intercambio de datos estrictamente necesarios con Crossmint y proveedores vinculados al flujo de pago, incluyendo validaciones de identidad y riesgo cuando corresponda.',
     ],
   },
@@ -121,7 +121,7 @@ const legalSections = [
     title: 'KYC, geografía y actividades restringidas',
     paragraphs: [
       'Dependiendo del método de pago, monto, jurisdicción o señales de riesgo, Crossmint podrá requerir KYC adicional, revisión manual o comprobaciones reforzadas antes de permitir la finalización de la operación.',
-      'No se permite utilizar la plataforma para actividades prohibidas, uso desde geografías sancionadas o finalidades contrarias a normativa AML/CTF. Tickets Nova podrá bloquear operaciones y cuentas cuando exista riesgo de incumplimiento.',
+      'No se permite utilizar la plataforma para actividades prohibidas, uso desde geografías sancionadas o finalidades contrarias a normativa AML/CTF. EventTix podrá bloquear operaciones y cuentas cuando exista riesgo de incumplimiento.',
     ],
   },
   {
@@ -129,7 +129,7 @@ const legalSections = [
     title: 'Prevención de fraude, monitoreo y control interno',
     paragraphs: [
       'La plataforma ejecuta monitoreo continuo de señales de riesgo transaccional, patrones de comportamiento, consistencia documental y resultados de autenticación en distintos puntos del flujo.',
-      'Con base en dichos controles, Tickets Nova podrá solicitar verificaciones adicionales, aplicar retenciones preventivas o cancelar operaciones cuando existan indicios razonables de riesgo elevado.',
+      'Con base en dichos controles, EventTix podrá solicitar verificaciones adicionales, aplicar retenciones preventivas o cancelar operaciones cuando existan indicios razonables de riesgo elevado.',
     ],
   },
   {
@@ -137,14 +137,14 @@ const legalSections = [
     title: 'Contracargos, disputas y trazabilidad del pago',
     paragraphs: [
       'Las disputas de pago y contracargos se gestionan conforme a las reglas de la red financiera y de los proveedores que participan en la operación, incluyendo los flujos habilitados por Crossmint.',
-      'La apertura de un contracargo no implica reconocimiento automático de reembolso por parte de Tickets Nova. Cada caso se resuelve con evidencia transaccional, reglas del emisor y políticas de reembolso vigentes.',
+      'La apertura de un contracargo no implica reconocimiento automático de reembolso por parte de EventTix. Cada caso se resuelve con evidencia transaccional, reglas del emisor y políticas de reembolso vigentes.',
     ],
   },
   {
     id: 'responsabilidad-indemnidad',
     title: 'Limitación de responsabilidad e indemnidad',
     paragraphs: [
-      'La responsabilidad de Tickets Nova se limita a la prestación diligente de su infraestructura digital, registros de evidencia y gestión operativa dentro del marco técnico y normativo aplicable.',
+      'La responsabilidad de EventTix se limita a la prestación diligente de su infraestructura digital, registros de evidencia y gestión operativa dentro del marco técnico y normativo aplicable.',
       'El usuario será responsable por la autenticidad de la información aportada y por cualquier perjuicio derivado de actuaciones contrarias a estos Términos o a la legislación vigente.',
     ],
   },
@@ -152,7 +152,7 @@ const legalSections = [
     id: 'suspension-terminacion',
     title: 'Suspensión, terminación y medidas correctivas',
     paragraphs: [
-      'Tickets Nova podrá suspender temporal o definitivamente accesos y funcionalidades cuando se detecten incumplimientos contractuales, uso indebido de la plataforma o riesgos de seguridad.',
+      'EventTix podrá suspender temporal o definitivamente accesos y funcionalidades cuando se detecten incumplimientos contractuales, uso indebido de la plataforma o riesgos de seguridad.',
       'La adopción de medidas correctivas no limita el ejercicio de acciones legales adicionales ni la implementación de controles complementarios para proteger usuarios, proveedores y operación.',
     ],
   },
@@ -160,7 +160,7 @@ const legalSections = [
     id: 'ley-aplicable-contacto',
     title: 'Ley aplicable, controversias y canal legal',
     paragraphs: [
-      'Estos Términos se interpretan conforme al marco jurídico aplicable al domicilio operacional informado por Tickets Nova, sin perjuicio de normas imperativas de protección al consumidor.',
+      'Estos Términos se interpretan conforme al marco jurídico aplicable al domicilio operacional informado por EventTix, sin perjuicio de normas imperativas de protección al consumidor.',
       `Para consultas de cumplimiento, requerimientos jurídicos o notificaciones formales, el canal oficial es ${CONTACT_INFO.email}.`,
     ],
   },
@@ -199,7 +199,7 @@ const legalIndex = legalSections.map((section, index) => ({
             trazabilidad documental y atención de contingencias asociadas al ciclo comercial.
           </p>
           <p class="legal-doc-intro mb-4">
-            La lectura íntegra es obligatoria antes de operar en la plataforma. Al utilizar Tickets Nova,
+            La lectura íntegra es obligatoria antes de operar en la plataforma. Al utilizar EventTix,
             el usuario reconoce haber comprendido el alcance de estas cláusulas y acepta su aplicación en
             todas las interacciones contractuales, técnicas y de soporte.
           </p>

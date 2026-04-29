@@ -24,7 +24,7 @@ class _PedidoEmailMeta:
 
 _EVENTOS_EMAIL: dict[PedidoEmailEvento, _PedidoEmailMeta] = {
 	"creado": _PedidoEmailMeta(
-		subject="Recibimos tu pedido en Tickets Nova",
+		subject="Recibimos tu pedido en EventTix",
 		heading="Tu pedido fue creado correctamente",
 		subheading="Estamos revisando tu solicitud. Te notificaremos cuando cambie de estado.",
 		status_label="Pendiente",
@@ -128,7 +128,7 @@ def _build_html_email(pedido: Pedidos, meta: _PedidoEmailMeta) -> str:
 	          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:760px;background:#ffffff;border:1px solid #e3e8f2;border-radius:12px;overflow:hidden;">
 	            <tr>
 	              <td style="padding:22px 24px;background:linear-gradient(120deg,#0f5fd8 0%,#0dc7ff 100%);color:#ffffff;">
-	                <p style="margin:0 0 6px 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.9;">Tickets Nova</p>
+	                <p style="margin:0 0 6px 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.9;">EventTix</p>
 	                <h1 style="margin:0;font-size:24px;line-height:1.2;">{escape(meta.heading)}</h1>
 	                <p style="margin:10px 0 0 0;font-size:14px;opacity:.92;">{escape(meta.subheading)}</p>
 	              </td>
@@ -209,7 +209,7 @@ def _build_html_email(pedido: Pedidos, meta: _PedidoEmailMeta) -> str:
 	            </tr>
 	            <tr>
 	              <td style="padding:16px 24px;background:#f7f9fc;font-size:12px;color:#60708c;">
-	                Este correo fue generado automaticamente por Tickets Nova. Si tienes dudas, responde este mensaje.
+	                Este correo fue generado automaticamente por EventTix. Si tienes dudas, responde este mensaje.
 	              </td>
 	            </tr>
 	          </table>
@@ -244,7 +244,7 @@ def _build_text_email(pedido: Pedidos, meta: _PedidoEmailMeta) -> str:
 
 	lineas.extend([
 		"",
-		"Tickets Nova",
+		"EventTix",
 	])
 	return "\n".join(lineas)
 

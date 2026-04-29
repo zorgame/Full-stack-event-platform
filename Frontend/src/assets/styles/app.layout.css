@@ -78,9 +78,9 @@ h6,
 
 .app-navbar {
   position: relative;
-  background: rgba(8, 10, 16, 0.88);
-  backdrop-filter: blur(10px) saturate(125%);
-  -webkit-backdrop-filter: blur(10px) saturate(125%);
+  background: #0b1019;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 }
@@ -93,21 +93,17 @@ h6,
 
 .app-navbar-overlay {
   position: relative;
-  overflow: clip;
+  overflow: visible;
   margin-bottom: -56px;
-  background: rgba(8, 10, 16, 0.46);
-  backdrop-filter: blur(14px) saturate(130%) brightness(72%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%) brightness(72%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0b1019;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 }
 
 .app-navbar-overlay::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(8, 10, 16, 0.5) 0%, rgba(8, 10, 16, 0.3) 100%);
+  content: none;
 }
 
 .nav-shell {
@@ -276,6 +272,20 @@ h6,
   font-size: 0.95rem;
   outline: 0;
   min-width: 0;
+}
+
+.navbar-search-input[type='search'] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+}
+
+.navbar-search-input[type='search']::-webkit-search-decoration,
+.navbar-search-input[type='search']::-webkit-search-cancel-button,
+.navbar-search-input[type='search']::-webkit-search-results-button,
+.navbar-search-input[type='search']::-webkit-search-results-decoration {
+  appearance: none;
+  -webkit-appearance: none;
+  display: none;
 }
 
 .navbar-search-input::placeholder {
@@ -502,11 +512,15 @@ h6,
   background: rgba(9, 12, 20, 0.55);
   backdrop-filter: blur(5px) saturate(120%);
   -webkit-backdrop-filter: blur(5px) saturate(120%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .carrito-panel-lateral {
   width: min(92vw, 390px);
   height: calc(100vh - 1rem);
+  max-height: calc(100vh - 1rem);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(160deg, rgba(12, 16, 26, 0.98) 0%, rgba(16, 23, 39, 0.98) 100%);
@@ -515,6 +529,13 @@ h6,
   display: grid;
   grid-template-rows: auto 1fr auto;
   overflow: hidden;
+}
+
+@supports (height: 100dvh) {
+  .carrito-panel-lateral {
+    height: calc(100dvh - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
 }
 
 .carrito-panel-lateral-header {
@@ -581,6 +602,8 @@ h6,
   height: 100%;
   overflow-y: auto;
   padding: 0.95rem 1rem;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .carrito-items-lista {
@@ -732,6 +755,31 @@ h6,
   background: rgba(8, 12, 20, 0.92);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+}
+
+@media (max-width: 576px) {
+  .carrito-panel-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .carrito-panel-lateral {
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  @supports (height: 100dvh) {
+    .carrito-panel-lateral {
+      height: 100dvh;
+      max-height: 100dvh;
+    }
+  }
+
+  .carrito-panel-lateral-footer {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
 }
 
 .carrito-panel-acciones {

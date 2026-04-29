@@ -11,8 +11,9 @@ from app.api.dependencies.security import (
 	get_current_user_optional,
 )
 from app.controllers import pedidos as pedidos_controller
-from app.schemas.metrics import PedidosMetricasResponse
+from app.schemas.metrics import PedidosMetricasResponse, RegistroVisitaPayload, RegistroVisitaResponse
 from app.schemas.tickets import PedidoCreate, PedidoEstadoUpdate, PedidoResponse
+from app.services.visitas_metricas import registrar_visita
 
 
 router = APIRouter(prefix="/pedidos", tags=["pedidos"])
@@ -87,6 +88,12 @@ async def obtener_metricas_pedidos_admin(
 		top_n=top_n,
 		ventas_solo_aprobadas=ventas_solo_aprobadas,
 	)
+
+
+@router.post("/metricas/visitas/register", response_model=RegistroVisitaResponse, status_code=status.HTTP_202_ACCEPTED)
+async def registrar_visita_publica(payload: RegistroVisitaPayload):
+	accepted = registrar_visita(visitor_id=payload.visitor_id, path=payload.path)
+	return RegistroVisitaResponse(accepted=accepted)
 
 
 @router.get("/{pedido_id}", response_model=PedidoResponse)

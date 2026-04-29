@@ -22,6 +22,9 @@ from app.schemas.metrics import (
     PedidosMetricasResponse,
     PedidosMetricasResumen,
     PedidosMetricasTendenciaItem,
+    RegistroVisitaPayload,
+    RegistroVisitaResponse,
+    VisitantesMetricasResumen,
 )
 from app.schemas.payments import (
     PaymentCheckoutPayload,
@@ -66,6 +69,9 @@ __all__ = [
     "PedidosMetricasResponse",
     "PedidosMetricasResumen",
     "PedidosMetricasTendenciaItem",
+    "RegistroVisitaPayload",
+    "RegistroVisitaResponse",
+    "VisitantesMetricasResumen",
     "PaymentCheckoutPayload",
     "PaymentCreateRequest",
     "PaymentFailureReason",

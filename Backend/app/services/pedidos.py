@@ -12,7 +12,17 @@ from app.repositories import pedidos as pedidos_repo
 from app.repositories import usuario_tickets as usuario_tickets_repo
 from app.repositories import usuarios as usuarios_repo
 from app.services.pedido_emails import enviar_correo_evento_pedido
-from app.schemas.tickets import DetallePedidoCreate, PedidoCreate, PedidoResponse
+from app.schemas.tickets import DetallePedidoCreate, PedidoCreate, PedidoResponse, DetallePedidoResponse
+def detalle_pedido_to_response(detalle: DetallePedido) -> DetallePedidoResponse:
+	# Incluye el nombre del producto (evento) en la respuesta
+	producto_nombre = None
+	if detalle.categoria and detalle.categoria.producto:
+		producto_nombre = detalle.categoria.producto.nombre
+	return DetallePedidoResponse.model_validate(
+		detalle,
+		from_attributes=True,
+		update={"producto_nombre": producto_nombre}
+	)
 from app.utils.cache import cache_delete, cache_delete_prefix, cache_get_json, cache_set_json
 
 
@@ -264,9 +274,13 @@ def listar_pedidos_usuario(
 		return [PedidoResponse.model_validate(item) for item in cached]
 
 	pedidos = pedidos_repo.listar_pedidos_por_usuario(db, usuario_id=usuario_id)
-	result: list[PedidoResponse] = [
-		PedidoResponse.model_validate(p, from_attributes=True) for p in pedidos
-	]
+
+	result: list[PedidoResponse] = []
+	for p in pedidos:
+		detalles = [detalle_pedido_to_response(d) for d in p.detalles]
+		pedido_dict = p.__dict__.copy()
+		pedido_dict["detalles"] = detalles
+		result.append(PedidoResponse.model_validate(pedido_dict, from_attributes=True))
 
 	cache_set_json(
 		cache_key,
@@ -302,7 +316,13 @@ def listar_pedidos(
 		limit=limit,
 		estados=estados_filtrados,
 	)
-	return [PedidoResponse.model_validate(p, from_attributes=True) for p in pedidos]
+	result: list[PedidoResponse] = []
+	for p in pedidos:
+		detalles = [detalle_pedido_to_response(d) for d in p.detalles]
+		pedido_dict = p.__dict__.copy()
+		pedido_dict["detalles"] = detalles
+		result.append(PedidoResponse.model_validate(pedido_dict, from_attributes=True))
+	return result
 
 
 def get_pedido(db: Session, *, pedido_id: int) -> PedidoResponse | None:

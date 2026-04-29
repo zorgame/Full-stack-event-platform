@@ -219,7 +219,7 @@ const currentUser = computed(() => authStore.user || null)
 
 const userFullName = computed(() => {
   const full = `${currentUser.value?.nombre || ''} ${currentUser.value?.apellido || ''}`.trim()
-  return full || currentUser.value?.email || 'Cliente Tickets Nova'
+  return full || currentUser.value?.email || 'Cliente EventTix'
 })
 
 const userInitials = computed(() => {
@@ -806,7 +806,7 @@ onBeforeUnmount(() => {
                     :disabled="!ticket.usuarioTicketId"
                     @click="openTransferPanel(ticket)"
                   >
-                    Transferir a otra cuenta Ticket Nova
+                    Transferir a otra cuenta EventTix
                   </button>
                 </div>
 
@@ -1037,7 +1037,7 @@ onBeforeUnmount(() => {
           <div class="transfer-modal-head">
             <div>
               <p class="transfer-modal-kicker mb-1">Transferencia interna</p>
-              <h3 class="h5 fw-bold mb-1">Enviar tickets a otra cuenta Ticket Nova</h3>
+              <h3 class="h5 fw-bold mb-1">Enviar tickets a otra cuenta EventTix</h3>
               <p class="text-muted mb-0">
                 Confirma la operacion con doble seguridad y valida la titularidad antes de enviar.
               </p>

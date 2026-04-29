@@ -60,6 +60,10 @@ const menuMovilAbierto = ref(false)
 const panelCarritoAbierto = ref(false)
 const pasoPanelCarrito = ref('carrito')
 
+function obtenerListaProductosCatalogo() {
+  return Array.isArray(tiendaCatalogo.products) ? tiendaCatalogo.products : []
+}
+
 const formularioCompra = ref({
   correoElectronico: '',
   nombreCompleto: '',
@@ -151,7 +155,7 @@ const itemsCarrito = computed(() => tiendaCarrito.items)
 const carritoVacio = computed(() => itemsCarrito.value.length === 0)
 const productosPorId = computed(() => {
   const mapa = new Map()
-  for (const producto of tiendaCatalogo.products) {
+  for (const producto of obtenerListaProductosCatalogo()) {
     const id = Number(producto?.id)
     if (Number.isFinite(id) && id > 0) {
       mapa.set(id, producto)
@@ -164,7 +168,7 @@ const sugerenciasTicket = computed(() => {
   const consulta = normalizarTexto(terminoRecortado.value)
   if (!consulta) return []
 
-  return tiendaCatalogo.products
+  return obtenerListaProductosCatalogo()
     .filter((ticket) => ticket?.id && normalizarTexto(ticket?.nombre).includes(consulta))
     .sort((a, b) => {
       const nombreA = normalizarTexto(a?.nombre)
@@ -653,7 +657,7 @@ async function prepararPanelConfirmacion({ sincronizar = false } = {}) {
 }
 
 async function asegurarProductosCargados() {
-  if (tiendaCatalogo.products.length || tiendaCatalogo.isLoadingProducts) return
+  if (obtenerListaProductosCatalogo().length || tiendaCatalogo.isLoadingProducts) return
   await tiendaCatalogo.loadProducts()
 }
 
@@ -1240,7 +1244,7 @@ function quitarItem(idCategoria) {
     <div class="container nav-shell px-3 px-lg-4">
       <div class="nav-principal-barra">
         <RouterLink class="navbar-brand fw-bold nav-brand d-flex align-items-center gap-2" :to="ROUTES.home">
-          <img :src="BRANDING.logoPath" alt="Tickets Nova" width="36" height="36" class="rounded-circle" />
+          <img :src="BRANDING.logoPath" alt="EventTix" width="36" height="36" class="rounded-circle" />
           <span>{{ BRANDING.name }}</span>
         </RouterLink>
 

@@ -4,9 +4,9 @@ import { CONTACT_INFO } from '../../config/constants'
 import { usePageMeta } from '../../utils/usePageMeta'
 
 usePageMeta({
-  title: 'Política de Reembolsos | Tickets Nova',
+  title: 'Política de Reembolsos | EventTix',
   description:
-    'Consulta las condiciones, plazos y procedimiento para solicitudes de reembolso en Tickets Nova.',
+    'Consulta las condiciones, plazos y procedimiento para solicitudes de reembolso en EventTix.',
 })
 
 const lastUpdated = '4 de abril de 2026'
@@ -16,7 +16,7 @@ const legalSections = [
     id: 'principios-generales',
     title: 'Principios generales de reembolso',
     paragraphs: [
-      'La política de reembolsos de Tickets Nova se rige por criterios de trazabilidad, evidencia verificable, validación financiera y cumplimiento de condiciones publicadas al momento de la compra.',
+      'La política de reembolsos de EventTix se rige por criterios de trazabilidad, evidencia verificable, validación financiera y cumplimiento de condiciones publicadas al momento de la compra.',
       'Cada caso se analiza individualmente, considerando naturaleza de la incidencia, estado del pedido, documentación disponible y reglas del evento o proveedor involucrado.',
     ],
   },
@@ -41,7 +41,7 @@ const legalSections = [
     title: 'Documentación requerida',
     paragraphs: [
       'La solicitud debe incluir identificación del pedido, referencia de pago, correo asociado, relato cronológico del incidente y soportes que permitan verificar consistencia de los hechos.',
-      'Tickets Nova podrá requerir documentos complementarios para acreditar titularidad, evitar fraude, completar conciliación o resolver discrepancias entre sistemas internos y externos.',
+      'EventTix podrá requerir documentos complementarios para acreditar titularidad, evitar fraude, completar conciliación o resolver discrepancias entre sistemas internos y externos.',
     ],
   },
   {
@@ -65,7 +65,7 @@ const legalSections = [
     title: 'Pagos Crossmint, disputas y contracargos',
     paragraphs: [
       'Si el pago se procesó mediante Crossmint, la gestión de disputa puede involucrar verificaciones adicionales con el procesador, el adquirente y la red financiera correspondiente.',
-      'La existencia de protección de contracargo del proveedor no reemplaza la revisión documental del caso por Tickets Nova ni garantiza por sí sola la devolución automática al usuario.',
+      'La existencia de protección de contracargo del proveedor no reemplaza la revisión documental del caso por EventTix ni garantiza por sí sola la devolución automática al usuario.',
     ],
   },
   {
@@ -104,7 +104,7 @@ const legalSections = [
     id: 'contracargos-disputas',
     title: 'Contracargos, disputas y reservas de derechos',
     paragraphs: [
-      'Si el usuario inicia contracargo ante su entidad financiera, Tickets Nova podrá suspender revisión paralela hasta contar con definición del proceso en la red de pagos correspondiente.',
+      'Si el usuario inicia contracargo ante su entidad financiera, EventTix podrá suspender revisión paralela hasta contar con definición del proceso en la red de pagos correspondiente.',
       'La plataforma se reserva el derecho de aportar evidencia documental y técnica en defensa de transacciones válidas, conforme normativa aplicable y reglas de marca.',
     ],
   },
@@ -147,7 +147,7 @@ const legalIndex = legalSections.map((section, index) => ({
 
           <p class="legal-doc-intro">
             Esta política describe en profundidad las condiciones, etapas y criterios de evaluación aplicables
-            a solicitudes de devolución económica relacionadas con operaciones realizadas en Tickets Nova.
+            a solicitudes de devolución económica relacionadas con operaciones realizadas en EventTix.
           </p>
           <p class="legal-doc-intro mb-4">
             Su objetivo es garantizar un proceso predecible, técnico y verificable para usuarios, áreas

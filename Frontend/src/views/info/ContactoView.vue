@@ -4,9 +4,9 @@ import { BRANDING, CONTACT_INFO } from '../../config/constants'
 import { usePageMeta } from '../../utils/usePageMeta'
 
 usePageMeta({
-  title: 'Contacto Corporativo | Tickets Nova',
+  title: 'Contacto Corporativo | EventTix',
   description:
-    'Canales oficiales de Tickets Nova para soporte comercial, cumplimiento y continuidad operativa de compras.',
+    'Canales oficiales de EventTix para soporte comercial, cumplimiento y continuidad operativa de compras.',
 })
 
 const mailToHref = `mailto:${CONTACT_INFO.email}`
@@ -49,7 +49,7 @@ const escalationFlow = [
         <div class="card-body p-4 p-lg-5">
           <div class="row g-4 align-items-center">
             <div class="col-12 col-lg-8">
-              <p class="contact-kicker mb-2">Centro de soporte Tickets Nova</p>
+              <p class="contact-kicker mb-2">Centro de soporte EventTix</p>
               <h2 class="h3 fw-bold mb-3">Mesa de atencion especializada y trazable</h2>
               <p class="text-muted mb-0">
                 Centralizamos incidencias de compra, validacion de pagos, soporte de cuenta y procesos de cumplimiento

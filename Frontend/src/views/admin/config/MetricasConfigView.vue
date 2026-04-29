@@ -4,7 +4,6 @@ import InternalPanelLayout from '../../../components/layout/InternalPanelLayout.
 import AppLoader from '../../../components/common/AppLoader.vue'
 import { ROUTES } from '../../../config/routes'
 import { obtenerMetricasPedidosAdmin } from '../../../services/pedidosService'
-import { obtenerResumenSincronizacionPagos } from '../../../services/paymentsService'
 
 const RANGO_OPTIONS = [
   { value: '7d', label: 'Ultimos 7 dias' },
@@ -19,11 +18,15 @@ const RANGO_OPTIONS = [
   { value: 'custom', label: 'Rango personalizado' },
 ]
 
+const RANGO_LABEL_MAP = Object.fromEntries(RANGO_OPTIONS.map((option) => [option.value, option.label]))
+
 const GROUP_BY_OPTIONS = [
   { value: 'day', label: 'Diario' },
   { value: 'week', label: 'Semanal' },
   { value: 'month', label: 'Mensual' },
 ]
+
+const GROUP_BY_LABEL_MAP = Object.fromEntries(GROUP_BY_OPTIONS.map((option) => [option.value, option.label]))
 
 const ESTADO_OPTIONS = [
   { value: 'pendiente', label: 'Pendiente' },
@@ -69,11 +72,6 @@ const cargando = ref(false)
 const metricas = ref(null)
 const error = ref('')
 const hasLoaded = ref(false)
-const syncLoading = ref(false)
-const syncError = ref('')
-const syncSummary = ref(null)
-const syncLimit = ref(50)
-const syncApplyOrder = ref(false)
 
 function toNumber(value) {
   const parsed = Number(value)
@@ -94,6 +92,11 @@ function formatPercent(value) {
   })}%`
 }
 
+function formatInteger(value) {
+  const normalized = Math.max(0, Math.trunc(toNumber(value)))
+  return normalized.toLocaleString('es-CO')
+}
+
 function formatDateTime(value) {
   if (!value) return 'Sin fecha'
   const date = new Date(value)
@@ -102,14 +105,6 @@ function formatDateTime(value) {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date)
-}
-
-function formatSyncReason(value) {
-  const normalized = String(value || '').trim().toLowerCase()
-  if (normalized === 'state_mismatch') return 'Estado desalineado'
-  if (normalized === 'unmapped_payment_status') return 'Estado Crossmint no mapeado'
-  if (normalized === 'provider_error') return 'Error consultando proveedor'
-  return normalized || 'Sin clasificar'
 }
 
 function toIsoDateStart(value) {
@@ -204,22 +199,6 @@ function aplicarFiltros() {
   cargarMetricas({ force: hasLoaded.value })
 }
 
-async function cargarSincronizacion() {
-  syncLoading.value = true
-  syncError.value = ''
-
-  try {
-    syncSummary.value = await obtenerResumenSincronizacionPagos({
-      limit: Number(syncLimit.value) || 50,
-      syncOrder: syncApplyOrder.value,
-    })
-  } catch (err) {
-    syncError.value = err?.message || 'No fue posible cargar la sincronizacion de pagos'
-  } finally {
-    syncLoading.value = false
-  }
-}
-
 function limpiarFiltros() {
   const defaults = createDefaultFilters()
   Object.assign(filtros, defaults)
@@ -254,6 +233,7 @@ function isPaisSeleccionado(pais) {
 }
 
 const resumen = computed(() => metricas.value?.resumen || null)
+const visitantes = computed(() => metricas.value?.visitantes || null)
 const estadoBreakdown = computed(() => metricas.value?.estado_breakdown || [])
 const tendencia = computed(() => metricas.value?.tendencia || [])
 const topProductos = computed(() => metricas.value?.top_productos || [])
@@ -348,18 +328,99 @@ const topCategoriasMaxIngresos = computed(() => {
   return Math.max(...topCategorias.value.map((item) => toNumber(item.ingresos)), 1)
 })
 
-const syncCoveragePercent = computed(() => {
-  const scanned = toNumber(syncSummary.value?.scannedOrders)
-  if (scanned <= 0) return 0
-  const withSession = toNumber(syncSummary.value?.withPaymentSession)
-  return (withSession / scanned) * 100
+const rangoActivoLabel = computed(() => {
+  if (filtros.rango === 'custom') {
+    const fechaDesde = filtros.fecha_desde || 'sin inicio'
+    const fechaHasta = filtros.fecha_hasta || 'sin cierre'
+    return `${fechaDesde} a ${fechaHasta}`
+  }
+
+  return RANGO_LABEL_MAP[filtros.rango] || filtros.rango
 })
 
-const syncHealthPercent = computed(() => {
-  const compared = toNumber(syncSummary.value?.comparedOrders)
-  if (compared <= 0) return 0
-  const inSync = toNumber(syncSummary.value?.inSync)
-  return (inSync / compared) * 100
+const estadosActivosLabel = computed(() => {
+  const labels = ESTADO_OPTIONS
+    .filter((item) => Boolean(filtros.estados[item.value]))
+    .map((item) => item.label)
+
+  return labels.length ? labels.join(', ') : 'Ninguno'
+})
+
+const filtroContextoItems = computed(() => [
+  `Rango: ${rangoActivoLabel.value}`,
+  `Agrupacion: ${GROUP_BY_LABEL_MAP[filtros.group_by] || filtros.group_by}`,
+  `Estados: ${estadosActivosLabel.value}`,
+  `Top N: ${filtros.top_n}`,
+])
+
+const kpiCards = computed(() => {
+  if (!resumen.value) return []
+
+  return [
+    {
+      key: 'total_generado',
+      label: 'Total generado',
+      value: formatMoney(resumen.value.total_generado),
+      caption: 'Ingresos confirmados en el periodo',
+      tone: 'money',
+    },
+    {
+      key: 'total_pendiente',
+      label: 'Dinero pendiente',
+      value: formatMoney(resumen.value.total_pendiente),
+      caption: 'Pagos aun no liquidados',
+      tone: 'pending',
+    },
+    {
+      key: 'total_rechazado',
+      label: 'Dinero rechazado',
+      value: formatMoney(resumen.value.total_rechazado),
+      caption: 'Transacciones fallidas o canceladas',
+      tone: 'risk',
+    },
+    {
+      key: 'tasa_aprobacion',
+      label: 'Tasa de aprobacion',
+      value: formatPercent(resumen.value.tasa_aprobacion),
+      caption: 'Efectividad del proceso de pago',
+      tone: 'efficiency',
+    },
+    {
+      key: 'ticket_promedio_pagado',
+      label: 'Ticket promedio pagado',
+      value: formatMoney(resumen.value.ticket_promedio_pagado),
+      caption: 'Valor medio por pedido aprobado',
+      tone: 'money',
+    },
+    {
+      key: 'unidades_vendidas',
+      label: 'Unidades vendidas',
+      value: formatInteger(resumen.value.unidades_vendidas),
+      caption: 'Volumen total de productos vendidos',
+      tone: 'efficiency',
+    },
+    {
+      key: 'visitantes_unicos',
+      label: 'Visitantes unicos (aprox)',
+      value: formatInteger(visitantes.value?.visitantes_unicos_aprox),
+      caption: 'Audiencia acumulada para este rango',
+      tone: 'traffic',
+    },
+    {
+      key: 'total_visitas',
+      label: 'Visitas registradas',
+      value: formatInteger(visitantes.value?.total_visitas),
+      caption: 'Eventos de visita aceptados por API',
+      tone: 'traffic',
+    },
+    {
+      key: 'visitantes_hoy',
+      label: 'Visitantes hoy (aprox)',
+      value: formatInteger(visitantes.value?.visitantes_hoy_aprox),
+      caption: 'Pulso diario de adquisicion',
+      tone: 'traffic',
+    },
+  ]
 })
 </script>
 
@@ -535,104 +596,8 @@ const syncHealthPercent = computed(() => {
         <p class="mb-0">{{ error }}</p>
       </div>
 
-      <section class="admin-card mb-2">
-        <div class="admin-card-header">
-          <div>
-            <p class="admin-metricas-card-kicker mb-1">Calidad operacional</p>
-            <h3 class="h6 fw-bold mb-0">Sincronizacion BD vs Crossmint</h3>
-          </div>
-          <div class="d-flex flex-wrap align-items-center gap-2">
-            <label class="small text-muted">Muestra</label>
-            <input
-              v-model.number="syncLimit"
-              class="form-control admin-control"
-              type="number"
-              min="1"
-              max="100"
-              style="width: 100px"
-            />
-            <div class="form-check form-switch m-0">
-              <input
-                id="sync-order-apply"
-                v-model="syncApplyOrder"
-                class="form-check-input"
-                type="checkbox"
-              />
-              <label class="form-check-label small" for="sync-order-apply">Aplicar sync de estado</label>
-            </div>
-            <button class="btn btn-sm btn-primary" type="button" :disabled="syncLoading" @click="cargarSincronizacion">
-              {{ syncLoading ? 'Validando...' : 'Validar sincronizacion' }}
-            </button>
-          </div>
-        </div>
-
-        <div class="admin-card-body">
-          <div v-if="syncError" class="alert alert-warning py-2 mb-2" role="alert">
-            {{ syncError }}
-          </div>
-
-          <div v-if="syncSummary" class="admin-metrics-grid mb-2">
-            <article class="admin-metric-card">
-              <p class="admin-metric-label mb-1">Pedidos escaneados</p>
-              <p class="admin-metric-value mb-0">{{ syncSummary.scannedOrders }}</p>
-            </article>
-            <article class="admin-metric-card">
-              <p class="admin-metric-label mb-1">Cobertura con session</p>
-              <p class="admin-metric-value mb-0">{{ formatPercent(syncCoveragePercent) }}</p>
-            </article>
-            <article class="admin-metric-card">
-              <p class="admin-metric-label mb-1">Consistencia</p>
-              <p class="admin-metric-value mb-0">{{ formatPercent(syncHealthPercent) }}</p>
-            </article>
-            <article class="admin-metric-card">
-              <p class="admin-metric-label mb-1">Desalineados</p>
-              <p class="admin-metric-value mb-0">{{ syncSummary.outOfSync }}</p>
-            </article>
-          </div>
-
-          <div v-if="syncSummary" class="small text-muted d-flex flex-wrap gap-3 mb-2">
-            <span>Proveedor: {{ syncSummary.providerAvailable ? 'disponible' : 'no disponible' }}</span>
-            <span>Consultados: {{ syncSummary.comparedOrders }}</span>
-            <span>Errores proveedor: {{ syncSummary.providerErrors }}</span>
-            <span v-if="syncSummary.syncOrderApplied">Sync aplicado: si</span>
-          </div>
-
-          <div v-if="syncSummary?.providerMessage" class="alert alert-secondary py-2 mb-2" role="alert">
-            {{ syncSummary.providerMessage }}
-          </div>
-
-          <div v-if="syncSummary && syncSummary.mismatches.length" class="table-responsive">
-            <table class="table table-sm align-middle mb-0 admin-metricas-table">
-              <thead>
-                <tr>
-                  <th scope="col">Pedido</th>
-                  <th scope="col">Referencia</th>
-                  <th scope="col">Estado BD</th>
-                  <th scope="col">Estado Crossmint</th>
-                  <th scope="col">Estado objetivo</th>
-                  <th scope="col">Motivo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in syncSummary.mismatches" :key="`${item.pedidoId}-${item.paymentId}`">
-                  <td>#{{ item.pedidoId || '-' }}</td>
-                  <td>{{ item.referencia || '-' }}</td>
-                  <td>{{ item.estadoPedido || '-' }}</td>
-                  <td>{{ item.estadoCrossmint || '-' }}</td>
-                  <td>{{ item.estadoObjetivo || '-' }}</td>
-                  <td>
-                    {{ formatSyncReason(item.reason) }}
-                    <span v-if="item.detail" class="text-muted"> · {{ item.detail }}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p v-else-if="syncSummary && !syncSummary.mismatches.length" class="small text-muted mb-0">
-            No se detectaron desalineaciones en la muestra consultada.
-          </p>
-        </div>
+      <section class="admin-metricas-context-bar mb-2">
+        <span v-for="item in filtroContextoItems" :key="item" class="admin-metricas-context-chip">{{ item }}</span>
       </section>
 
       <div v-if="cargando" class="admin-loading-box">
@@ -648,29 +613,15 @@ const syncHealthPercent = computed(() => {
 
       <template v-else-if="resumen">
         <section class="admin-metricas-kpi-grid mb-2">
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Total generado</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ formatMoney(resumen.total_generado) }}</p>
-          </article>
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Dinero pendiente</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ formatMoney(resumen.total_pendiente) }}</p>
-          </article>
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Dinero rechazado</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ formatMoney(resumen.total_rechazado) }}</p>
-          </article>
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Tasa de aprobacion</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ formatPercent(resumen.tasa_aprobacion) }}</p>
-          </article>
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Ticket promedio pagado</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ formatMoney(resumen.ticket_promedio_pagado) }}</p>
-          </article>
-          <article class="admin-metricas-kpi-card">
-            <p class="admin-metric-label mb-1">Unidades vendidas</p>
-            <p class="admin-metricas-kpi-value mb-0">{{ resumen.unidades_vendidas }}</p>
+          <article
+            v-for="card in kpiCards"
+            :key="card.key"
+            class="admin-metricas-kpi-card"
+            :class="`admin-metricas-kpi-card-${card.tone}`"
+          >
+            <p class="admin-metric-label mb-1">{{ card.label }}</p>
+            <p class="admin-metricas-kpi-value mb-1">{{ card.value }}</p>
+            <p class="admin-metricas-kpi-caption mb-0">{{ card.caption }}</p>
           </article>
         </section>
 
@@ -865,6 +816,9 @@ const syncHealthPercent = computed(() => {
         <div class="admin-metricas-footnote">
           <span>
             Cache backend: {{ performanceInfo?.cached ? 'hit' : 'miss' }} · TTL {{ performanceInfo?.cache_ttl_seconds || '-' }}s
+          </span>
+          <span>
+            Visitas: {{ visitantes?.disponible ? 'ok' : 'no disponible' }} · fuente {{ visitantes?.fuente || '-' }}
           </span>
           <span>Refrescado en: {{ ultimaActualizacion }}</span>
         </div>

@@ -3,6 +3,7 @@ import { ROUTES } from '../config/routes'
 import { SITE_CONFIG } from '../config/site'
 import { useAuthStore } from '../stores/auth'
 import { applySeo, createBreadcrumbStructuredData } from '../utils/seo'
+import { trackRouteVisit } from '../services/visitorMetricsService'
 import HomeView from '../views/HomeView.vue'
 import TicketCategoriasView from '../views/TicketCategoriasView.vue'
 import PrivacidadView from '../views/info/PrivacidadView.vue'
@@ -163,7 +164,7 @@ function resolveSeoForRoute(to) {
         ...base,
         title: `Contacto oficial | ${SITE_CONFIG.brand.name}`,
         description:
-          'Canales oficiales de soporte de Tickets Nova para compras, validaciones y seguimiento postventa.',
+          'Canales oficiales de soporte de EventTix para compras, validaciones y seguimiento postventa.',
         pageType: 'ContactPage',
       }
     case 'terminos':
@@ -171,21 +172,21 @@ function resolveSeoForRoute(to) {
         ...base,
         title: `Terminos y condiciones | ${SITE_CONFIG.brand.name}`,
         description:
-          'Condiciones de uso, pagos y responsabilidades para operar con seguridad en Tickets Nova.',
+          'Condiciones de uso, pagos y responsabilidades para operar con seguridad en EventTix.',
       }
     case 'privacidad':
       return {
         ...base,
         title: `Politica de privacidad | ${SITE_CONFIG.brand.name}`,
         description:
-          'Consulta como Tickets Nova protege datos personales y aplica controles de seguridad y cumplimiento.',
+          'Consulta como EventTix protege datos personales y aplica controles de seguridad y cumplimiento.',
       }
     case 'reembolsos':
       return {
         ...base,
         title: `Politica de reembolsos | ${SITE_CONFIG.brand.name}`,
         description:
-          'Revisa condiciones, plazos y requisitos para solicitudes de reembolso en Tickets Nova.',
+          'Revisa condiciones, plazos y requisitos para solicitudes de reembolso en EventTix.',
       }
     case 'login':
       return {
@@ -315,6 +316,8 @@ router.afterEach((to) => {
   const seo = resolveSeoForRoute(to)
   const breadcrumb = resolveBreadcrumbForRoute(to, seo.path)
   const structuredData = breadcrumb ? [breadcrumb] : []
+
+  trackRouteVisit(to, { indexable: seo.indexable })
 
   applySeo({
     title: seo.title,

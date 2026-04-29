@@ -7,10 +7,15 @@ from app.models import DetallePedido, Pedidos
 
 
 def get_pedido(db: Session, pedido_id: int) -> Pedidos | None:
+	from app.models import Categorias, Productos
 	stmt: Select[tuple[Pedidos]] = (
 		select(Pedidos)
 		.where(Pedidos.id == pedido_id)
-		.options(selectinload(Pedidos.detalles).selectinload(DetallePedido.categoria))
+		.options(
+			selectinload(Pedidos.detalles)
+			.selectinload(DetallePedido.categoria)
+			.selectinload(Categorias.producto)
+		)
 	)
 	return db.execute(stmt).scalars().first()
 
@@ -25,10 +30,15 @@ def listar_pedidos_por_usuario(
 	*,
 	usuario_id: int,
 ) -> Sequence[Pedidos]:
+	from app.models import Categorias, Productos
 	stmt: Select[tuple[Pedidos]] = (
 		select(Pedidos)
 		.where(Pedidos.usuario_id == usuario_id)
-		.options(selectinload(Pedidos.detalles).selectinload(DetallePedido.categoria))
+		.options(
+			selectinload(Pedidos.detalles)
+			.selectinload(DetallePedido.categoria)
+			.selectinload(Categorias.producto)
+		)
 	)
 	return db.execute(stmt).scalars().all()
 
@@ -44,9 +54,14 @@ def listar_pedidos(
 	if estados:
 		stmt = stmt.where(Pedidos.estado.in_(tuple(estados)))
 
+	from app.models import Categorias, Productos
 	stmt = (
 		stmt
-		.options(selectinload(Pedidos.detalles).selectinload(DetallePedido.categoria))
+		.options(
+			selectinload(Pedidos.detalles)
+			.selectinload(DetallePedido.categoria)
+			.selectinload(Categorias.producto)
+		)
 		.order_by(Pedidos.id.desc())
 		.offset(skip)
 		.limit(limit)

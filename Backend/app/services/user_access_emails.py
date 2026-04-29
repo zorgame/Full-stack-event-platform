@@ -38,7 +38,7 @@ def enviar_correo_acceso_pago(
     login_url = escape(_login_url())
 
     es_nuevo_usuario = bool(password_temporal)
-    subject = "Acceso a tu compra en Tickets Nova"
+    subject = "Acceso a tu compra en EventTix"
 
     credenciales_html = ""
     credenciales_text = ""
@@ -83,7 +83,7 @@ def enviar_correo_acceso_pago(
               <h2 style=\"font-size:16px;margin-top:20px;\">Credenciales de acceso</h2>
               {credenciales_html}
               <p>Ingresa desde: <a href=\"{login_url}\">{login_url}</a></p>
-              <p style=\"margin-top:22px;color:#4a5b78;\">Tickets Nova</p>
+              <p style=\"margin-top:22px;color:#4a5b78;\">EventTix</p>
             </td>
           </tr>
         </table>
@@ -154,7 +154,7 @@ def enviar_correo_transferencia_tickets(
                             <tr>
                                 <td style="padding:22px 24px;border-bottom:1px solid #e4eaf3;">
                                     <h1 style="margin:0;font-size:22px;">Transferencia de tickets procesada</h1>
-                                    <p style="margin:8px 0 0 0;color:#4a5b78;">Se notifico el movimiento en tu cuenta Tickets Nova.</p>
+                                    <p style="margin:8px 0 0 0;color:#4a5b78;">Se notifico el movimiento en tu cuenta EventTix.</p>
                                 </td>
                             </tr>
                             <tr>
@@ -167,7 +167,7 @@ def enviar_correo_transferencia_tickets(
                                     <strong>Cantidad:</strong> {cantidad_str}</p>
                                     {nota_html}
                                     <p>Ingresa a tu panel para revisar el detalle: <a href="{login_url}">{login_url}</a></p>
-                                    <p style="margin-top:22px;color:#4a5b78;">Tickets Nova</p>
+                                    <p style="margin-top:22px;color:#4a5b78;">EventTix</p>
                                 </td>
                             </tr>
                         </table>
@@ -201,7 +201,7 @@ def enviar_correo_transferencia_tickets(
                             <tr>
                                 <td style="padding:22px 24px;border-bottom:1px solid #e4eaf3;">
                                     <h1 style="margin:0;font-size:22px;">Recibiste tickets en tu cuenta</h1>
-                                    <p style="margin:8px 0 0 0;color:#4a5b78;">Se acredito una transferencia en tu perfil Tickets Nova.</p>
+                                    <p style="margin:8px 0 0 0;color:#4a5b78;">Se acredito una transferencia en tu perfil EventTix.</p>
                                 </td>
                             </tr>
                             <tr>
@@ -214,7 +214,7 @@ def enviar_correo_transferencia_tickets(
                                     <strong>Cantidad:</strong> {cantidad_str}</p>
                                     {nota_html}
                                     <p>Ingresa a tu panel para revisar el detalle: <a href="{login_url}">{login_url}</a></p>
-                                    <p style="margin-top:22px;color:#4a5b78;">Tickets Nova</p>
+                                    <p style="margin-top:22px;color:#4a5b78;">EventTix</p>
                                 </td>
                             </tr>
                         </table>

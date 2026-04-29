@@ -4,9 +4,9 @@ import { CONTACT_INFO } from '../../config/constants'
 import { usePageMeta } from '../../utils/usePageMeta'
 
 usePageMeta({
-  title: 'Política de Privacidad | Tickets Nova',
+  title: 'Política de Privacidad | EventTix',
   description:
-    'Conoce cómo Tickets Nova recopila, usa y protege datos personales para compras, soporte y prevención de fraude.',
+    'Conoce cómo EventTix recopila, usa y protege datos personales para compras, soporte y prevención de fraude.',
 })
 
 const lastUpdated = '4 de abril de 2026'
@@ -16,7 +16,7 @@ const legalSections = [
     id: 'alcance-politica',
     title: 'Alcance de esta política',
     paragraphs: [
-      'Esta Política describe el tratamiento de datos personales realizado por Tickets Nova en calidad de responsable y, cuando aplica, en coordinación con encargados tecnológicos y financieros.',
+      'Esta Política describe el tratamiento de datos personales realizado por EventTix en calidad de responsable y, cuando aplica, en coordinación con encargados tecnológicos y financieros.',
       'El alcance cubre web, canales de soporte, formularios operativos, herramientas de atención, pasarelas integradas y registros internos vinculados al ciclo de compra y postventa.',
     ],
   },
@@ -49,7 +49,7 @@ const legalSections = [
     title: 'Bases de legitimación jurídica',
     paragraphs: [
       'El tratamiento se sustenta en la ejecución de la relación contractual, el cumplimiento de obligaciones legales y el interés legítimo de seguridad, continuidad y prevención de abuso.',
-      'Cuando una finalidad requiera consentimiento específico, Tickets Nova implementará mecanismos de aceptación explícita y trazabilidad para su posterior revocatoria o actualización.',
+      'Cuando una finalidad requiera consentimiento específico, EventTix implementará mecanismos de aceptación explícita y trazabilidad para su posterior revocatoria o actualización.',
     ],
   },
   {
@@ -64,7 +64,7 @@ const legalSections = [
     id: 'proveedores-encargados',
     title: 'Proveedores, encargados y acceso controlado',
     paragraphs: [
-      'Tickets Nova trabaja con proveedores de infraestructura, mensajería, identidad y pago bajo esquemas contractuales que exigen confidencialidad, seguridad y limitación de propósito.',
+      'EventTix trabaja con proveedores de infraestructura, mensajería, identidad y pago bajo esquemas contractuales que exigen confidencialidad, seguridad y limitación de propósito.',
       'El acceso de terceros se restringe por principio de mínima necesidad, controles de rol y monitoreo de actividad, evitando exposiciones innecesarias de información personal.',
     ],
   },
@@ -80,7 +80,7 @@ const legalSections = [
     id: 'transferencias-internacionales',
     title: 'Transferencias internacionales de datos',
     paragraphs: [
-      'Cuando la operación técnica requiera procesamiento fuera de la jurisdicción local, Tickets Nova adopta salvaguardas contractuales y controles de seguridad equivalentes.',
+      'Cuando la operación técnica requiera procesamiento fuera de la jurisdicción local, EventTix adopta salvaguardas contractuales y controles de seguridad equivalentes.',
       'Toda transferencia se limita a finalidades compatibles con esta Política y se revisa periódicamente para mantener estándares de protección adecuados.',
     ],
   },
@@ -120,7 +120,7 @@ const legalSections = [
     id: 'actualizaciones-politica',
     title: 'Actualizaciones de esta política',
     paragraphs: [
-      'Tickets Nova podrá actualizar esta Política por cambios normativos, evolución de servicios, nuevas integraciones o fortalecimiento de medidas de cumplimiento y seguridad.',
+      'EventTix podrá actualizar esta Política por cambios normativos, evolución de servicios, nuevas integraciones o fortalecimiento de medidas de cumplimiento y seguridad.',
       'Las versiones vigentes se publicarán en esta ruta con su fecha de actualización para facilitar control documental y transparencia frente a usuarios y terceros interesados.',
     ],
   },
@@ -144,7 +144,7 @@ const legalIndex = legalSections.map((section, index) => ({
   <div>
     <PageHeading
       title="Política de privacidad"
-      subtitle="Lineamientos de recopilación, uso, custodia y protección de datos personales en Tickets Nova."
+      subtitle="Lineamientos de recopilación, uso, custodia y protección de datos personales en EventTix."
     />
     <section class="container pb-5 legal-page">
       <div class="card border-0 shadow-sm legal-doc-shell">
@@ -162,7 +162,7 @@ const legalIndex = legalSections.map((section, index) => ({
           <p class="legal-doc-updated mb-4">Última actualización: {{ lastUpdated }}</p>
 
           <p class="legal-doc-intro">
-            Esta Política ofrece una visión integral sobre la forma en que Tickets Nova administra información
+            Esta Política ofrece una visión integral sobre la forma en que EventTix administra información
             personal, incluyendo gobierno de datos, controles técnicos, roles de acceso, continuidad
             operativa y mecanismos de respuesta ante requerimientos de titulares.
           </p>
